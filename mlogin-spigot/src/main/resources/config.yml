@@ -21,3 +21,5 @@ locale:
   REGISTER-REQUIRED: "&eWelcome. Please use /register <password> <confirmPassword>"
   LOGIN-REQUIRED: "&eWelcome back. Please use /login <password>"
   AUTO-LOGIN: "&AYou have been automatically logged in."
+  CANT-COMMAND: "&cYou can't use this command until you log in."
+  CANT-CHAT: "&cYou can't chat until you log in."

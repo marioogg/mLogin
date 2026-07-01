@@ -16,6 +16,7 @@
  */
 package me.marioogg.mlogin.spigot;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import me.marioogg.mlogin.core.database.RedisManager;
@@ -57,6 +58,7 @@ public class SpigotPlugin extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
         Locale.reload();
+        PacketEvents.getAPI().load();
         if (!loadSecretKey()) {
             getServer().getPluginManager().disablePlugin(this);
             return;

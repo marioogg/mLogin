@@ -48,6 +48,9 @@ public class Locale {
     public static String LOGIN_REQUIRED;
     public static String AUTO_LOGIN;
 
+    public static String CANT_COMMAND;
+    public static String CANT_CHAT;
+
     public static void reload() {
         config = SpigotPlugin.getInstance().getConfig();
         ONLY_PLAYERS_CMD = c("ONLY-PLAYERS-CMD");
@@ -65,5 +68,7 @@ public class Locale {
         REGISTER_REQUIRED = c("REGISTER-REQUIRED");
         LOGIN_REQUIRED = c("LOGIN-REQUIRED");
         AUTO_LOGIN = c("AUTO-LOGIN");
+        CANT_COMMAND = c("CANT-COMMAND");
+        CANT_CHAT = c("CANT-CHAT");
     }
 }
