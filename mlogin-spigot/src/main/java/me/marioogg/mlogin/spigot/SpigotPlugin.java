@@ -18,6 +18,7 @@ package me.marioogg.mlogin.spigot;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.google.common.collect.ImmutableList;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
 import me.marioogg.mlogin.core.database.RedisManager;
 import me.marioogg.mlogin.core.protocol.RedisRequestManager;
@@ -52,6 +53,12 @@ public class SpigotPlugin extends JavaPlugin {
     private String secretKey;
     @Getter
     private final Logger log = Log.getLogger();
+
+    @Override
+    public void onLoad() {
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().load();
+    }
 
     @Override
     public void onEnable() {

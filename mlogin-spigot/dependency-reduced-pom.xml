@@ -44,6 +44,10 @@
               <pattern>io.github.revxrsal</pattern>
               <shadedPattern>me.marioogg.mlogin.libs.lamp</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>com.github.retrooper</pattern>
+              <shadedPattern>me.marioogg.mlogin.libs.packetevents</shadedPattern>
+            </relocation>
           </relocations>
           <filters>
             <filter>
