@@ -19,7 +19,6 @@ package me.marioogg.mlogin.velocity.listener;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.connection.PreLoginEvent;
@@ -30,8 +29,6 @@ import me.marioogg.mlogin.api.user.UserRepository;
 import me.marioogg.mlogin.core.model.AuthState;
 import me.marioogg.mlogin.core.util.UuidUtil;
 import me.marioogg.mlogin.velocity.util.MojangApi;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.UUID;
 

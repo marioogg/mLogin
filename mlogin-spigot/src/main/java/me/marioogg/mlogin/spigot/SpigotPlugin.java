@@ -23,6 +23,7 @@ import me.marioogg.mlogin.core.protocol.RedisRequestManager;
 import me.marioogg.mlogin.core.util.Log;
 import me.marioogg.mlogin.spigot.cache.AuthStateCache;
 import me.marioogg.mlogin.spigot.command.LoginCommand;
+import me.marioogg.mlogin.spigot.command.RegisterCommand;
 import me.marioogg.mlogin.spigot.listener.AuthStateListener;
 import me.marioogg.mlogin.spigot.listener.JoinListener;
 import me.marioogg.mlogin.spigot.listener.ProtectionListener;
@@ -49,7 +50,7 @@ public class SpigotPlugin extends JavaPlugin {
     @Getter
     private String secretKey;
     @Getter
-    private final Logger logger = Log.getLogger();
+    private final Logger log = Log.getLogger();
 
     @Override
     public void onEnable() {
@@ -92,7 +93,7 @@ public class SpigotPlugin extends JavaPlugin {
                     "Copy your secret key from the first line of config.conf",
                     "in plugins/mLogin in your proxy server."
             );
-            msg.forEach(logger::error);
+            msg.forEach(log::error);
             return false;
         }
         return true;
@@ -109,5 +110,6 @@ public class SpigotPlugin extends JavaPlugin {
     private void initCmds(){
         Lamp<BukkitCommandActor> lamp = BukkitLamp.builder(this).build();
         lamp.register(new LoginCommand());
+        lamp.register(new RegisterCommand());
     }
 }

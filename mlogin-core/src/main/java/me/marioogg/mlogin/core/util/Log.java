@@ -21,5 +21,5 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Log {
-    @Getter private static Logger logger = LogManager.getLogger("mLogin");
+    @Getter private final static Logger logger = LogManager.getLogger("mLogin");
 }

@@ -53,7 +53,7 @@ public class LoginCommand {
                     Bukkit.getScheduler().runTask(plugin, () -> handle(player, response)));
         } catch (Exception e) {
             player.sendMessage(Locale.CANT_PROCESS_PASS);
-            plugin.getLogger().error(("Exception cifrating '"+player.getName()+"' password. "), e);
+            plugin.getLog().error(("Exception cifrating '"+player.getName()+"' password. "), e);
         }
     }
 

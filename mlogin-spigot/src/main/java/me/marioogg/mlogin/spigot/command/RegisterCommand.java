@@ -26,12 +26,15 @@ import me.marioogg.mlogin.spigot.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
 
 public class RegisterCommand {
     private static final SpigotPlugin plugin = SpigotPlugin.getInstance();
     private static final long TIMEOUT_MILLIS = 5000;
     private static final int MIN_PASSWORD_LENGTH = plugin.getConfig().getInt("security.min-password-length");
-
+    @Command("register")
+    @Description("Register password.")
     public void register(CommandSender sender, String password, String confirmPassword){
         if (!(sender instanceof Player player)){
             sender.sendMessage(Locale.ONLY_PLAYERS_CMD);
@@ -61,7 +64,7 @@ public class RegisterCommand {
                     Bukkit.getScheduler().runTask(plugin, () -> handle(player, response)));
         } catch (Exception e) {
             player.sendMessage(Locale.CANT_PROCESS_PASS);
-            plugin.getLogger().error(("Exception cifrating '"+player.getName()+"' password. "), e);
+            plugin.getLog().error(("Exception cifrating '"+player.getName()+"' password. "), e);
         }
 
     }
