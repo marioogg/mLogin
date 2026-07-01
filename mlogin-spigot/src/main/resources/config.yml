@@ -1,0 +1,20 @@
+security:
+  secret-key: ""
+  min-password-length: 8
+redis:
+  host: localhost
+  port: 6379
+  password: ""
+locale:
+  ONLY-PLAYERS-CMD: "&cOnly players can execute this command."
+  ALREADY-LOGGED-IN: "&cYou're already logged in."
+  ALREADY-REGISTERED: "&cYou're already registered."
+  CANT-PROCESS-PASS: "&cError processing your password. Please contact an administrator."
+  ERROR-LOGIN: "&cError logging in. Please contact an administrator."
+  SUCCESSFUL-LOGIN: "&aSuccessful login. Welcome!"
+  SUCCESSFUL-REGISTER: "&aSuccessful register. Welcome!"
+  WRONG-PASSWORD: "&cPassword is incorrect. Please try again."
+  NOT-REGISTERED: "&cYou are not registered. Please register by using /register <password> <confirmPassword>"
+  TIMEOUT: "&cError processing your request. Please contact an administrator."
+  PASSWORDS-DONT-MATCH: "&cPasswords don't match!"
+  PASSWORD-TOO-SHORT: "&cPassword is too short. Please make it at least <min> characters long."
