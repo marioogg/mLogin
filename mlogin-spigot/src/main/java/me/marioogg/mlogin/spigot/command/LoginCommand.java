@@ -24,8 +24,10 @@ import me.marioogg.mlogin.core.protocol.RequestType;
 import me.marioogg.mlogin.spigot.SpigotPlugin;
 import me.marioogg.mlogin.spigot.util.Locale;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 
@@ -63,6 +65,9 @@ public class LoginCommand {
         if (response.isSuccess()) {
             plugin.getAuthCache().set(player.getUniqueId(), AuthState.LOGGED_IN);
             player.sendMessage(Locale.SUCCESSFUL_LOGIN);
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+            player.removePotionEffect(PotionEffectType.BLINDNESS);
+            player.removePotionEffect(PotionEffectType.SLOW);
             return;
         }
 

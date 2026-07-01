@@ -21,12 +21,16 @@ import me.marioogg.mlogin.core.protocol.AuthRequest;
 import me.marioogg.mlogin.core.protocol.AuthResponse;
 import me.marioogg.mlogin.core.protocol.RequestType;
 import me.marioogg.mlogin.spigot.SpigotPlugin;
+import me.marioogg.mlogin.spigot.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
 
@@ -66,20 +70,26 @@ public class JoinListener implements Listener {
         return switch (response.getReason()) {
             case OK -> AuthState.LOGGED_IN;
             case REGISTER_REQUIRED -> AuthState.REGISTER_REQUIRED;
-            // Cualquier otra cosa (LOGIN_REQUIRED, TIMEOUT, ERROR...) la tratamos
-            // como "necesita login": es la opción más segura, nunca deja pasar de más.
             default -> AuthState.LOGIN_REQUIRED;
         };
     }
 
     private void announce(Player player, AuthState state) {
         switch (state) {
-            case REGISTER_REQUIRED ->
-                    player.sendMessage(ChatColor.YELLOW + "Bienvenido. Regístrate con /register <contraseña> <contraseña>");
-            case LOGIN_REQUIRED ->
-                    player.sendMessage(ChatColor.YELLOW + "Bienvenido de nuevo. Inicia sesión con /login <contraseña>");
-            case LOGGED_IN ->
-                    player.sendMessage(ChatColor.GREEN + "Sesión iniciada automáticamente (cuenta premium).");
+            case REGISTER_REQUIRED -> {
+                player.sendMessage(Locale.REGISTER_REQUIRED);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 4, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, false, false));
+            }
+            case LOGIN_REQUIRED -> {
+                player.sendMessage(Locale.LOGIN_REQUIRED);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 4, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, false, false));
+            }
+            case LOGGED_IN -> {
+                player.sendMessage(Locale.AUTO_LOGIN);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+            }
         }
     }
 }

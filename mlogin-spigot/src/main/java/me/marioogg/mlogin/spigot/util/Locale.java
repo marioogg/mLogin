@@ -44,6 +44,10 @@ public class Locale {
     public static String PASSWORDS_DONT_MATCH;
     public static String PASSWORD_TOO_SHORT;
 
+    public static String REGISTER_REQUIRED;
+    public static String LOGIN_REQUIRED;
+    public static String AUTO_LOGIN;
+
     public static void reload() {
         config = SpigotPlugin.getInstance().getConfig();
         ONLY_PLAYERS_CMD = c("ONLY-PLAYERS-CMD");
@@ -58,5 +62,8 @@ public class Locale {
         TIMEOUT = c("TIMEOUT");
         PASSWORDS_DONT_MATCH = c("PASSWORDS-DONT-MATCH");
         PASSWORD_TOO_SHORT = c("PASSWORD-TOO-SHORT");
+        REGISTER_REQUIRED = c("REGISTER-REQUIRED");
+        LOGIN_REQUIRED = c("LOGIN-REQUIRED");
+        AUTO_LOGIN = c("AUTO-LOGIN");
     }
 }
