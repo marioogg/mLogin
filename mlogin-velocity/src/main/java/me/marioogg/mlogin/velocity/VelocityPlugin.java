@@ -45,8 +45,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Plugin(
-    id = "mlogin-velocity",
-    name = "mlogin-velocity",
+    id = "mlogin",
+    name = "mLogin",
     version = "1.0-SNAPSHOT"
 )
 public class VelocityPlugin {

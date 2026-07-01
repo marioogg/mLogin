@@ -1,4 +1,4 @@
-name: mlogin-spigot
+name: mLogin
 version: '${project.version}'
 main: me.marioogg.mlogin.spigot.SpigotPlugin
 api-version: '1.20'
