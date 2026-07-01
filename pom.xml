@@ -13,6 +13,7 @@
         <module>mlogin-api</module>
         <module>mlogin-velocity</module>
         <module>mlogin-spigot</module>
+        <module>bootstrap</module>
     </modules>
 
     <properties>
