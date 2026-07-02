@@ -17,6 +17,7 @@
 package me.marioogg.mlogin.velocity;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.Plugin;
@@ -38,6 +39,7 @@ import me.marioogg.mlogin.velocity.redis.VelocityRequestHandler;
 import me.marioogg.mlogin.velocity.repository.SQLUserRepository;
 import me.marioogg.mlogin.velocity.service.InMemorySessionService;
 import me.marioogg.mlogin.velocity.service.VelocityAuthService;
+import me.marioogg.mlogin.velocity.command.BackupCommand;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Logger;
 
@@ -92,7 +94,19 @@ public class VelocityPlugin {
         loadServices();
         loadRequestHandler();
         loadListeners();
+        loadCommands();
         logger.info("mLogin enabled successfully.");
+    }
+
+    private void loadCommands() {
+        try {
+            server.getCommandManager().register(
+                    server.getCommandManager().metaBuilder("mlogin").build(),
+                    new BackupCommand(this)
+            );
+        } catch (Exception e) {
+            logger.error("Failed to register commands.", e);
+        }
     }
 
     private void loadConfig(){
