@@ -58,7 +58,7 @@ public class VelocityRequestHandler {
                 case REGISTER -> register(request, uuid);
             };
         } catch (Exception e) {
-            Log.getLogger().error("Error procesando la petición " + request.getRequestId() + " (" + request.getType() + ")", e);
+            Log.getLogger().error("Error processing the request " + request.getRequestId() + " (" + request.getType() + ")", e);
             return AuthResponse.fail(request.getRequestId(), ResponseReason.ERROR);
         }
     }

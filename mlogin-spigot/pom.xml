@@ -13,6 +13,7 @@
     <artifactId>mlogin-spigot</artifactId>
     <name>mlogin-spigot</name>
 
+
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,6 +38,7 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.2</version>
                 <configuration>
+                    <finalName>mLogin-${project.version}</finalName>
                     <minimizeJar>true</minimizeJar>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>

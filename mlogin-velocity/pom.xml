@@ -115,6 +115,7 @@
             <goal>shade</goal>
           </goals>
           <configuration>
+            <finalName>mLogin-velocity-${project.version}</finalName>
             <createDependencyReducedPom>false</createDependencyReducedPom>
             <minimizeJar>true</minimizeJar>
             <filters>
