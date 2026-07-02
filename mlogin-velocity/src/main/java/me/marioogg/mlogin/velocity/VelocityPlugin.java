@@ -101,7 +101,7 @@ public class VelocityPlugin {
     private void loadCommands() {
         try {
             server.getCommandManager().register(
-                    server.getCommandManager().metaBuilder("mlogin").build(),
+                    server.getCommandManager().metaBuilder("mloginbackup").build(),
                     new BackupCommand(this)
             );
         } catch (Exception e) {
