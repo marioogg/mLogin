@@ -25,5 +25,6 @@ public enum ResponseReason {
     LOGIN_REQUIRED,
     REGISTER_REQUIRED,
     TIMEOUT,
+    RATE_LIMITED,
     ERROR
 }

@@ -28,9 +28,11 @@ public class AuthResponse {
     private final boolean success;
     private final ResponseReason reason;
     private final long timestamp;
+    // only relevant when reason is RATE_LIMITED, otherwise 0
+    private final long retryAfterSeconds;
 
     public static AuthResponse of(UUID requestId, boolean success, ResponseReason reason) {
-        return new AuthResponse(requestId, success, reason, System.currentTimeMillis());
+        return new AuthResponse(requestId, success, reason, System.currentTimeMillis(), 0);
     }
 
     public static AuthResponse ok(UUID requestId) {
@@ -39,5 +41,10 @@ public class AuthResponse {
 
     public static AuthResponse fail(UUID requestId, ResponseReason reason) {
         return of(requestId, false, reason);
+    }
+
+    public static AuthResponse rateLimited(UUID requestId, long retryAfterSeconds) {
+        return new AuthResponse(requestId, false, ResponseReason.RATE_LIMITED,
+                System.currentTimeMillis(), retryAfterSeconds);
     }
 }

@@ -20,10 +20,7 @@ import me.marioogg.mlogin.api.auth.AuthService;
 import me.marioogg.mlogin.api.user.UserRepository;
 import me.marioogg.mlogin.core.encryption.EncryptionUtils;
 import me.marioogg.mlogin.core.model.AuthState;
-import me.marioogg.mlogin.core.protocol.AuthRequest;
-import me.marioogg.mlogin.core.protocol.AuthResponse;
-import me.marioogg.mlogin.core.protocol.RedisRequestManager;
-import me.marioogg.mlogin.core.protocol.ResponseReason;
+import me.marioogg.mlogin.core.protocol.*;
 import me.marioogg.mlogin.core.util.Log;
 
 import java.util.Optional;
@@ -36,13 +33,15 @@ public class VelocityRequestHandler {
     private final UserRepository users;
     private final AuthService authService;
     private final String secretKey;
+    private final LoginRateLimiter rateLimiter;
 
     public VelocityRequestHandler(RedisRequestManager requestManager, UserRepository users,
-                                   AuthService authService, String secretKey) {
+                                  AuthService authService, String secretKey, LoginRateLimiter rateLimiter) {
         this.requestManager = requestManager;
         this.users = users;
         this.authService = authService;
         this.secretKey = secretKey;
+        this.rateLimiter = rateLimiter;
     }
 
     public void start(ExecutorService executor) {
@@ -78,6 +77,11 @@ public class VelocityRequestHandler {
             return AuthResponse.fail(request.getRequestId(), ResponseReason.ALREADY_LOGGED_IN);
         }
 
+        long blockedSeconds = rateLimiter.getBlockedSecondsRemaining(uuid);
+        if (blockedSeconds > 0) {
+            return AuthResponse.rateLimited(request.getRequestId(), blockedSeconds);
+        }
+
         Optional<String> hash = users.getPasswordHash(uuid);
         if (hash.isEmpty()) {
             return AuthResponse.fail(request.getRequestId(), ResponseReason.NOT_REGISTERED);
@@ -85,9 +89,11 @@ public class VelocityRequestHandler {
 
         String plainPassword = EncryptionUtils.decrypt(request.getEncryptedPassword(), secretKey);
         if (!EncryptionUtils.verifyPassword(plainPassword, hash.get())) {
+            rateLimiter.registerFailure(uuid);
             return AuthResponse.fail(request.getRequestId(), ResponseReason.WRONG_PASSWORD);
         }
 
+        rateLimiter.registerSuccess(uuid);
         authService.setState(uuid, AuthState.LOGGED_IN);
         return AuthResponse.ok(request.getRequestId());
     }

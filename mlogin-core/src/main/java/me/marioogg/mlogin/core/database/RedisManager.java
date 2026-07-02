@@ -20,6 +20,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
+import redis.clients.jedis.params.SetParams;
 
 public class RedisManager {
     private final JedisPool pool;
@@ -54,6 +55,36 @@ public class RedisManager {
                 jedis.psubscribe(subscriber, pattern);
             }
         }, "mlogin-redis-psubscribe").start();
+    }
+
+    public long incrementWithExpiry(String key, int ttlSeconds) {
+        try (Jedis jedis = pool.getResource()) {
+            long value = jedis.incr(key);
+            if (value == 1L) {
+                jedis.expire(key, ttlSeconds);
+            }
+            return value;
+        }
+    }
+
+    public void setWithExpiry(String key, int ttlSeconds) {
+        try (Jedis jedis = pool.getResource()) {
+            jedis.set(key, "1", SetParams.setParams().ex(ttlSeconds));
+        }
+    }
+
+    // ttl seconds left of the message, 0 if expired or not found
+    public long getTtlSeconds(String key) {
+        try (Jedis jedis = pool.getResource()) {
+            long ttl = jedis.ttl(key);
+            return ttl > 0 ? ttl : 0;
+        }
+    }
+
+    public void delete(String... keys) {
+        try (Jedis jedis = pool.getResource()) {
+            jedis.del(keys);
+        }
     }
 
     public void close() {

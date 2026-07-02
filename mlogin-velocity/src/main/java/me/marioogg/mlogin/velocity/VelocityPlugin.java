@@ -30,6 +30,7 @@ import me.marioogg.mlogin.core.config.ConfigManager;
 import me.marioogg.mlogin.core.database.RedisManager;
 import me.marioogg.mlogin.core.database.SQLManager;
 import me.marioogg.mlogin.core.encryption.EncryptionUtils;
+import me.marioogg.mlogin.core.protocol.LoginRateLimiter;
 import me.marioogg.mlogin.core.protocol.RedisRequestManager;
 import me.marioogg.mlogin.core.util.Log;
 import me.marioogg.mlogin.velocity.listener.LoginListener;
@@ -45,9 +46,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Plugin(
-    id = "mlogin",
-    name = "mLogin",
-    version = "1.0-SNAPSHOT"
+        id = "mlogin",
+        name = "mLogin",
+        version = "1.0-SNAPSHOT"
 )
 public class VelocityPlugin {
 
@@ -73,6 +74,7 @@ public class VelocityPlugin {
     private RedisRequestManager requestManager;
     private VelocityRequestHandler requestHandler;
     private ExecutorService requestExecutor;
+    private LoginRateLimiter rateLimiter;
 
     private final Logger logger = Log.getLogger();
 
@@ -154,8 +156,17 @@ public class VelocityPlugin {
             return t;
         });
 
+        rateLimiter = new LoginRateLimiter(
+                redis,
+                config.getInt("rate-limit.max-attempts", 5),
+                config.getInt("rate-limit.attempt-window-seconds", 60),
+                config.getInt("rate-limit.base-block-seconds", 30),
+                config.getInt("rate-limit.max-block-seconds", 900),
+                config.getInt("rate-limit.strike-window-seconds", 3600)
+        );
+
         requestManager = new RedisRequestManager(redis);
-        requestHandler = new VelocityRequestHandler(requestManager, userRepository, authService, secretKey);
+        requestHandler = new VelocityRequestHandler(requestManager, userRepository, authService, secretKey, rateLimiter);
         requestHandler.start(requestExecutor);
     }
 
