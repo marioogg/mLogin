@@ -1,30 +1,38 @@
-security:
-  secret-key: ""
-  min-password-length: 8
-redis:
-  host: localhost
-  port: 6379
-  password: ""
-locale:
-  ONLY-PLAYERS-CMD: "&cOnly players can execute this command."
-  ALREADY-LOGGED-IN: "&cYou're already logged in."
-  ALREADY-REGISTERED: "&cYou're already registered."
-  CANT-PROCESS-PASS: "&cError processing your password. Please contact an administrator."
-  ERROR-LOGIN: "&cError logging in. Please contact an administrator."
-  SUCCESSFUL-LOGIN: "&aSuccessful login. Welcome!"
-  SUCCESSFUL-REGISTER: "&aSuccessful register. Welcome!"
-  WRONG-PASSWORD: "&cPassword is incorrect. Please try again."
-  NOT-REGISTERED: "&cYou are not registered. Please register by using /register <password> <confirmPassword>"
-  TIMEOUT: "&cError processing your request. Please contact an administrator."
-  PASSWORDS-DONT-MATCH: "&cPasswords don't match!"
-  PASSWORD-TOO-SHORT: "&cPassword is too short. Please make it at least <min> characters long."
-  REGISTER-REQUIRED: "&eWelcome. Please use /register <password> <confirmPassword>"
-  LOGIN-REQUIRED: "&eWelcome back. Please use /login <password>"
-  AUTO-LOGIN: "&AYou have been automatically logged in."
-  CANT-COMMAND: "&cYou can't use this command until you log in."
-  CANT-CHAT: "&cYou can't chat until you log in."
-  CHANGE-PASS-SUCCESS: "&aYour password has been changed successfully."
-  CHANGE-PASS-FAIL: "&cCould not change your password. Please contact an administrator."
-  UNREGISTER-SUCCESS: "&aAccount <player> has been removed."
-  UNREGISTER-FAIL: "&cCould not remove account <player>. Please contact an administrator."
-  NO-PERMISSION: "&cYou don't have permission to run that command."
+# --------------------------------------------
+#           __            _
+#     _____|  |   ___ ___|_|___
+#    |     |  |__| . | . | |   |
+#    |_|_|_|_____|___|_  |_|_|_|
+#                    |___|
+# made with <3 by marioogg
+# version: ${project.version}
+# documentation: https://mlogin.marioogg.dev
+# discord: https://discord.gg/VXsGUyR5wA
+# --------------------------------------------
+secret-key: ""
+
+redis: # Redis connection settings.
+    host: localhost
+    port: 6379
+    password: ""
+
+settings:
+    # If true, will log all login attempts, commands and redis queries in console.
+    debug: false
+    # Checks for updates on startup. Will notify you in console if there's a new version available.
+    update-check: true
+    # The default language (es, en). It will load messages_es.yml or messages_en.yml
+    language: en
+
+protection:
+    # Block everything before logging in (movement, chat, etc.)
+    general-protection: true
+    effects:
+        blindness: true
+        slowness: true
+
+password:
+    # The minimum length for passwords.
+    min: 8
+    # The maximum length for passwords.
+    max: 32

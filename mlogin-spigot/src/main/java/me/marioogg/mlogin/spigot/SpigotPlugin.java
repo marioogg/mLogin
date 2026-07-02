@@ -26,6 +26,7 @@ import me.marioogg.mlogin.core.util.Log;
 import me.marioogg.mlogin.spigot.cache.AuthStateCache;
 import me.marioogg.mlogin.spigot.command.LoginCommand;
 import me.marioogg.mlogin.spigot.command.RegisterCommand;
+import me.marioogg.mlogin.spigot.config.SpigotConfigManager;
 import me.marioogg.mlogin.spigot.listener.AuthStateListener;
 import me.marioogg.mlogin.spigot.listener.JoinListener;
 import me.marioogg.mlogin.spigot.listener.ProtectionListener;
@@ -43,6 +44,9 @@ public class SpigotPlugin extends JavaPlugin {
 
     @Getter
     public static SpigotPlugin instance;
+    @Getter
+    public static final List<String> CONFIG_FILES = ImmutableList.of("config.yml", "messages_en.yml", "messages_es.yml", "messages_fr.yml");
+
     @Getter
     private RedisManager redis;
     @Getter
@@ -63,7 +67,7 @@ public class SpigotPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig();
+        SpigotConfigManager.loadConfigurations(this, CONFIG_FILES);
         Locale.reload();
         PacketEvents.getAPI().load();
         if (!loadSecretKey()) {

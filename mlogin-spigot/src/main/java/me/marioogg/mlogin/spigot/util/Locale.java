@@ -18,6 +18,7 @@ package me.marioogg.mlogin.spigot.util;
 
 import lombok.Getter;
 import me.marioogg.mlogin.spigot.SpigotPlugin;
+import me.marioogg.mlogin.spigot.config.SpigotConfigManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
 @Getter
@@ -59,7 +60,11 @@ public class Locale {
     public static String NO_PERMISSION;
 
     public static void reload() {
-        config = SpigotPlugin.getInstance().getConfig();
+        switch (SpigotPlugin.getInstance().getConfig().getString("language", "en").toLowerCase()) {
+            case "es" -> config = SpigotConfigManager.getConfig("messages_es.yml");
+            case "fr" -> config = SpigotConfigManager.getConfig("messages_fr.yml");
+            default -> config = SpigotConfigManager.getConfig("messages_en.yml");
+        }
         ONLY_PLAYERS_CMD = c("ONLY-PLAYERS-CMD");
         ALREADY_LOGGED_IN = c("ALREADY-LOGGED-IN");
         ALREADY_REGISTERED = c("ALREADY-REGISTERED");

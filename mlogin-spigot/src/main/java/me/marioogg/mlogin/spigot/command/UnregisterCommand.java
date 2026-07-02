@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class UnregisterCommand {
 
     @Command("unregister")
     @Description("Unregister a player's account (admin only).")
+    @CommandPermission("mlogin.command.unregister")
     public void unregister(CommandSender sender, String targetName) {
         // permission check: require 'mlogin.admin' or operator
         if (!(sender.hasPermission("mlogin.admin") || sender.isOp())) {
