@@ -88,4 +88,17 @@ public class SQLUserRepository implements UserRepository {
             Log.getLogger().error("Error saving user " + uuid, e);
         }
     }
+
+    @Override
+    public void delete(UUID uuid) {
+        String query = "DELETE FROM mlogin_users WHERE uuid = ?";
+
+        try (Connection con = sql.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setString(1, uuid.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            Log.getLogger().error("Error deleting user " + uuid, e);
+        }
+    }
 }

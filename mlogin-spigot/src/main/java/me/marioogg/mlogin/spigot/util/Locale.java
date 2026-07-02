@@ -50,6 +50,13 @@ public class Locale {
 
     public static String CANT_COMMAND;
     public static String CANT_CHAT;
+    public static String CHANGE_PASS_SUCCESS;
+    public static String CHANGE_PASS_FAIL;
+
+    public static String UNREGISTER_SUCCESS;
+    public static String UNREGISTER_FAIL;
+
+    public static String NO_PERMISSION;
 
     public static void reload() {
         config = SpigotPlugin.getInstance().getConfig();
@@ -59,7 +66,7 @@ public class Locale {
         CANT_PROCESS_PASS = c("CANT-PROCESS-PASS");
         ERROR_LOGIN = c("ERROR-LOGIN");
         SUCCESSFUL_LOGIN = c("SUCCESSFUL-LOGIN");
-        SUCCESSFUL_REGISTER = c("SUCCESSFUL-LOGIN");
+        SUCCESSFUL_REGISTER = c("SUCCESSFUL-REGISTER");
         WRONG_PASSWORD = c("WRONG-PASSWORD");
         NOT_REGISTERED = c("NOT-REGISTERED");
         TIMEOUT = c("TIMEOUT");
@@ -70,5 +77,12 @@ public class Locale {
         AUTO_LOGIN = c("AUTO-LOGIN");
         CANT_COMMAND = c("CANT-COMMAND");
         CANT_CHAT = c("CANT-CHAT");
+        CHANGE_PASS_SUCCESS = c("CHANGE-PASS-SUCCESS");
+        CHANGE_PASS_FAIL = c("CHANGE-PASS-FAIL");
+
+        UNREGISTER_SUCCESS = c("UNREGISTER-SUCCESS");
+        UNREGISTER_FAIL = c("UNREGISTER-FAIL");
+
+        NO_PERMISSION = c("NO-PERMISSION");
     }
 }

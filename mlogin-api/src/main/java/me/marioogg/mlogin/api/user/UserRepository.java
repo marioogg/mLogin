@@ -26,4 +26,6 @@ public interface UserRepository {
     boolean exists(UUID uuid);
 
     void save(UUID uuid, String username, String passwordHash);
+
+    void delete(UUID uuid);
 }

@@ -55,6 +55,8 @@ public class VelocityRequestHandler {
                 case CHECK_STATE -> checkState(request, uuid);
                 case LOGIN -> login(request, uuid);
                 case REGISTER -> register(request, uuid);
+                case CHANGE_PASSWORD -> changePassword(request, uuid);
+                case UNREGISTER -> unregister(request, uuid);
             };
         } catch (Exception e) {
             Log.getLogger().error("Error processing the request " + request.getRequestId() + " (" + request.getType() + ")", e);
@@ -111,6 +113,45 @@ public class VelocityRequestHandler {
         String hash = EncryptionUtils.hashPassword(plainPassword);
         users.save(uuid, request.getUsername(), hash);
         authService.setState(uuid, AuthState.LOGGED_IN);
+        return AuthResponse.ok(request.getRequestId());
+    }
+
+    private AuthResponse changePassword(AuthRequest request, UUID uuid) throws Exception {
+        if (!users.exists(uuid)) {
+            return AuthResponse.fail(request.getRequestId(), ResponseReason.NOT_REGISTERED);
+        }
+
+        // encryptedPassword = old password encrypted, extra = new password encrypted
+        String oldPlain = EncryptionUtils.decrypt(request.getEncryptedPassword(), secretKey);
+        String newPlain = request.getExtra() != null ? EncryptionUtils.decrypt(request.getExtra(), secretKey) : null;
+
+        if (newPlain == null || newPlain.isEmpty()) {
+            return AuthResponse.fail(request.getRequestId(), ResponseReason.ERROR);
+        }
+
+        Optional<String> hash = users.getPasswordHash(uuid);
+        if (hash.isEmpty()) {
+            return AuthResponse.fail(request.getRequestId(), ResponseReason.NOT_REGISTERED);
+        }
+
+        if (!EncryptionUtils.verifyPassword(oldPlain, hash.get())) {
+            rateLimiter.registerFailure(uuid);
+            return AuthResponse.fail(request.getRequestId(), ResponseReason.WRONG_PASSWORD);
+        }
+
+        String newHash = EncryptionUtils.hashPassword(newPlain);
+        users.save(uuid, request.getUsername(), newHash);
+        rateLimiter.registerSuccess(uuid);
+        return AuthResponse.ok(request.getRequestId());
+    }
+
+    private AuthResponse unregister(AuthRequest request, UUID uuid) throws Exception {
+        if (!users.exists(uuid)) {
+            return AuthResponse.fail(request.getRequestId(), ResponseReason.NOT_REGISTERED);
+        }
+
+        users.delete(uuid);
+        authService.setState(uuid, AuthState.REGISTER_REQUIRED);
         return AuthResponse.ok(request.getRequestId());
     }
 }

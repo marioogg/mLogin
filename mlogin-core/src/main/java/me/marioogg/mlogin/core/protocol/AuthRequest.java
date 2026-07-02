@@ -29,6 +29,7 @@ public class AuthRequest {
     private final UUID playerUuid;
     private final String username;
     private final String encryptedPassword;
+    private final String extra;
     private final long timestamp;
     private final int protocolVersion;
 
@@ -39,6 +40,20 @@ public class AuthRequest {
                 playerUuid,
                 username,
                 encryptedPassword,
+                null,
+                System.currentTimeMillis(),
+                ProtocolVersion.CURRENT
+        );
+    }
+
+    public static AuthRequest of(RequestType type, UUID playerUuid, String username, String encryptedPassword, String extra) {
+        return new AuthRequest(
+                UUID.randomUUID(),
+                type,
+                playerUuid,
+                username,
+                encryptedPassword,
+                extra,
                 System.currentTimeMillis(),
                 ProtocolVersion.CURRENT
         );

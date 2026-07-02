@@ -120,5 +120,7 @@ public class SpigotPlugin extends JavaPlugin {
         Lamp<BukkitCommandActor> lamp = BukkitLamp.builder(this).build();
         lamp.register(new LoginCommand());
         lamp.register(new RegisterCommand());
+        lamp.register(new me.marioogg.mlogin.spigot.command.ChangePasswordCommand());
+        lamp.register(new me.marioogg.mlogin.spigot.command.UnregisterCommand());
     }
 }

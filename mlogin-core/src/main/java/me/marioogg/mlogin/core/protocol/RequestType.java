@@ -19,5 +19,7 @@ package me.marioogg.mlogin.core.protocol;
 public enum RequestType {
     LOGIN,
     REGISTER,
-    CHECK_STATE
+    CHECK_STATE,
+    CHANGE_PASSWORD,
+    UNREGISTER
 }
