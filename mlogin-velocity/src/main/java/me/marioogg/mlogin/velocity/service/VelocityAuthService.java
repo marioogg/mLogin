@@ -17,6 +17,8 @@
 package me.marioogg.mlogin.velocity.service;
 
 import com.google.gson.Gson;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.marioogg.mlogin.api.auth.AuthService;
 import me.marioogg.mlogin.api.session.SessionService;
 import me.marioogg.mlogin.api.user.UserRepository;
@@ -26,7 +28,11 @@ import me.marioogg.mlogin.core.model.AuthSession;
 import me.marioogg.mlogin.core.model.AuthState;
 import me.marioogg.mlogin.core.protocol.MessageChannel;
 import me.marioogg.mlogin.core.protocol.ProtocolVersion;
+import me.marioogg.mlogin.velocity.VelocityPlugin;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.util.Optional;
 import java.util.UUID;
 public class VelocityAuthService implements AuthService {
 
@@ -62,5 +68,30 @@ public class VelocityAuthService implements AuthService {
     private void broadcast(UUID uuid, AuthState state) {
         AuthMessage message = new AuthMessage(uuid, state, System.currentTimeMillis(), ProtocolVersion.CURRENT);
         redis.publish(MessageChannel.AUTH_STATE, gson.toJson(message));
+        if (state == AuthState.LOGGED_IN && VelocityPlugin.getInstance().getConfig().getBoolean("network-redirect.enabled", false)) {
+            String serverName = VelocityPlugin.getInstance().getConfig().getString("network-redirect.server", "");
+            if (serverName != null && !serverName.isEmpty()) {
+                sendToServer(uuid, serverName);
+            }
+        }
+    }
+
+    private void sendToServer(UUID uuid, String serverName) {
+        Player player = VelocityPlugin.getInstance().getServer().getPlayer(uuid).orElse(null);
+        if (player == null) {
+            return;
+        }
+
+        Optional<RegisteredServer> targetServer = VelocityPlugin.getInstance().getServer().getServer(serverName);
+        if (targetServer.isEmpty()) {
+            player.sendMessage(Component.text("Server '" + serverName + "' does not exist..", NamedTextColor.RED));
+            return;
+        }
+
+        player.createConnectionRequest(targetServer.get()).connect().thenAccept(result -> {
+            if (!result.isSuccessful()) {
+                player.sendMessage(Component.text("Couldn't connect to server '" + serverName + "'.", NamedTextColor.RED));
+            }
+        });
     }
 }

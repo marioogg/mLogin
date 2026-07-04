@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 
 public class ConfigManager {
     private ConfigurationNode root;
@@ -60,11 +62,39 @@ public class ConfigManager {
         }
     }
 
+    private ConfigurationNode node(String path) {
+        return root.node((Object[]) path.split("\\."));
+    }
+
     public String getString(String path, String def) {
-        return root.node((Object[]) path.split("\\.")).getString(def);
+        return node(path).getString(def);
     }
 
     public int getInt(String path, int def) {
-        return root.node((Object[]) path.split("\\.")).getInt(def);
+        return node(path).getInt(def);
+    }
+
+    public boolean getBoolean(String path, boolean def) {
+        return node(path).getBoolean(def);
+    }
+
+    public long getLong(String path, long def) {
+        return node(path).getLong(def);
+    }
+
+    public double getDouble(String path, double def) {
+        return node(path).getDouble(def);
+    }
+
+    public float getFloat(String path, float def) {
+        return node(path).getFloat(def);
+    }
+
+    public List<String> getStringList(String path) {
+        try {
+            return node(path).getList(String.class, Collections.emptyList());
+        } catch (SerializationException e) {
+            return Collections.emptyList();
+        }
     }
 }

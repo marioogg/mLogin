@@ -26,8 +26,10 @@ import com.velocitypowered.api.proxy.Player;
 import me.marioogg.mlogin.api.auth.AuthService;
 import me.marioogg.mlogin.api.session.SessionService;
 import me.marioogg.mlogin.api.user.UserRepository;
+import me.marioogg.mlogin.core.config.ConfigManager;
 import me.marioogg.mlogin.core.model.AuthState;
 import me.marioogg.mlogin.core.util.UuidUtil;
+import me.marioogg.mlogin.velocity.VelocityPlugin;
 import me.marioogg.mlogin.velocity.util.MojangApi;
 
 import java.util.UUID;
@@ -48,6 +50,11 @@ public class LoginListener {
     public EventTask onPreLogin(PreLoginEvent event) {
         String username = event.getUsername();
         UUID offlineUuid = UuidUtil.offlineUuid(username);
+
+        if (!VelocityPlugin.getInstance().getConfig().getBoolean("mojang-check.enabled", true)){
+            event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
+            return null;
+        }
 
         if (users.exists(offlineUuid)) {
             event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());

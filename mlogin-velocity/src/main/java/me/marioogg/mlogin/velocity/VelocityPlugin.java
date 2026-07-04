@@ -53,7 +53,8 @@ import java.util.concurrent.Executors;
         version = "1.0-SNAPSHOT"
 )
 public class VelocityPlugin {
-
+    @Getter
+    private static VelocityPlugin instance;
     @Getter
     private final ProxyServer server;
     @Getter
@@ -88,6 +89,7 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        instance = this;
         loadConfig();
         loadRedis();
         loadSql();
