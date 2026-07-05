@@ -50,7 +50,9 @@ import java.util.concurrent.Executors;
 @Plugin(
         id = "mlogin",
         name = "mLogin",
-        version = "1.0-SNAPSHOT"
+        version = "1.0-SNAPSHOT",
+        authors = {"marioogg"},
+        description = "A simple authentication plugin for Velocity."
 )
 public class VelocityPlugin {
     @Getter

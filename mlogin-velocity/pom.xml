@@ -91,7 +91,7 @@
             <configuration>
               <finalName>mLogin-velocity-${project.version}</finalName>
               <createDependencyReducedPom>false</createDependencyReducedPom>
-              <minimizeJar>true</minimizeJar>
+              <minimizeJar>false</minimizeJar>
               <filters>
                 <filter>
                   <artifact>*:*</artifact>
