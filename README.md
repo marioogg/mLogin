@@ -173,12 +173,6 @@ Set `settings.language` on the backend to `en`, `es` or `fr`. Messages load from
 
 ---
 
-## Optional integrations
-
-mLogin recognizes these plugins on the backend if present (soft dependencies — none are required): ProtocolLib, ProtocolSupport, ViaVersion, ViaBackwards, ViaRewind, Geyser-Spigot, packetevents.
-
----
-
 ## Troubleshooting
 
 - **Nobody can log in / decryption errors** — The secret key doesn't match between proxy and backend. Copy the proxy's key into every backend's `config.yml` exactly.
