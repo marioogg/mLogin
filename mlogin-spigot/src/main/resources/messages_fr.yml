@@ -11,6 +11,7 @@ locale:
   TIMEOUT: "&cErreur lors du traitement de votre demande. Veuillez contacter un administrateur."
   PASSWORDS-DONT-MATCH: "&cLes mots de passe ne correspondent pas !"
   PASSWORD-TOO-SHORT: "&cLe mot de passe est trop court. Veuillez utiliser au moins <min> caractères."
+  PASSWORD-TOO-LONG: "&cLe mot de passe est trop long. Veuillez utiliser moins de <max> caractères."
   REGISTER-REQUIRED: "&eBienvenue. Veuillez utiliser /register <mot_de_passe> <confirmer_mot_de_passe>"
   LOGIN-REQUIRED: "&eBienvenue à nouveau. Veuillez utiliser /login <mot_de_passe>"
   AUTO-LOGIN: "&aVous avez été connecté automatiquement."

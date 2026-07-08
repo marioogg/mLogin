@@ -99,7 +99,7 @@ public class SpigotPlugin extends JavaPlugin {
     }
 
     private boolean loadSecretKey() {
-        secretKey = getConfig().getString("security.secret-key", "");
+        secretKey = SpigotConfigManager.getConfig("config.yml").getString("secret-key", "");
         if (secretKey.isEmpty()) {
             List<String> msg = ImmutableList.of(
                     "Your secret key in config.yml is empty.",

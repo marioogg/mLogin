@@ -123,8 +123,8 @@ public class VelocityPlugin {
                 secretKey = EncryptionUtils.generateSecureKey(32);
                 config.set("security.secret-key", secretKey);
                 config.save();
-                logger.info("No se encontró una clave secreta en la config: se ha generado una nueva automáticamente. "
-                        + "Cópiala en el config.conf de mlogin-spigot en cada backend.");
+                logger.info("There's not a valid secret key in config.conf. mLogin has generated one for you."
+                        + "Copy it into every backend configuration or follow https://mlogin.marioogg.dev");
             }
         } catch (Exception e) {
             logger.error("Error loading or saving the config.", e);

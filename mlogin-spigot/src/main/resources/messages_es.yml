@@ -11,6 +11,7 @@ locale:
   TIMEOUT: "&cError al procesar tu solicitud. Por favor, contacta con un administrador."
   PASSWORDS-DONT-MATCH: "&c¡Las contraseñas no coinciden!"
   PASSWORD-TOO-SHORT: "&cLa contraseña es demasiado corta. Por favor, que tenga al menos <min> caracteres."
+  PASSWORD-TOO-LONG: "&cLa contraseña es demasiado larga. Por favor, que tenga menos de <max> caracteres."
   REGISTER-REQUIRED: "&eBienvenido. Por favor, usa /register <contraseña> <confirmarContraseña>"
   LOGIN-REQUIRED: "&eBienvenido de nuevo. Por favor, usa /login <contraseña>"
   AUTO-LOGIN: "&aHas iniciado sesión automáticamente."

@@ -47,14 +47,6 @@
                             <shadedPattern>me.marioogg.mlogin.libs.lamp</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>com.github.retrooper</pattern>
-                            <shadedPattern>me.marioogg.mlogin.libs.packetevents</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>io.github.retrooper</pattern>
-                            <shadedPattern>me.marioogg.mlogin.libs.packetevents</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>net.kyori</pattern>
                             <shadedPattern>me.marioogg.mlogin.libs.kyori</shadedPattern>
                         </relocation>

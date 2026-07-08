@@ -46,11 +46,13 @@ public class LoginCommand {
 
         if (plugin.getAuthCache().isLoggedIn(player.getUniqueId())){
             player.sendMessage(Locale.ALREADY_LOGGED_IN);
+            return;
         }
 
         try {
             String encrypted = EncryptionUtils.encrypt(password, plugin.getSecretKey());
-            AuthRequest request = AuthRequest.of(RequestType.LOGIN, player.getUniqueId(), player.getName(), encrypted);
+            String ip = player.getAddress() != null ? player.getAddress().getAddress().getHostAddress() : null;
+            AuthRequest request = AuthRequest.of(RequestType.LOGIN, player.getUniqueId(), player.getName(), encrypted, null, ip);
 
             plugin.getRequestManager().sendRequest(request, TIMEOUT_MILLIS).thenAccept(response ->
                     Bukkit.getScheduler().runTask(plugin, () -> handle(player, response)));

@@ -35,7 +35,8 @@ import revxrsal.commands.annotation.Description;
 public class RegisterCommand {
     private static final SpigotPlugin plugin = SpigotPlugin.getInstance();
     private static final long TIMEOUT_MILLIS = 5000;
-    private static final int MIN_PASSWORD_LENGTH = plugin.getConfig().getInt("security.min-password-length");
+    private static final int MIN_PASSWORD_LENGTH = plugin.getConfig().getInt("password.min", 8);
+    private static final int MAX_PASSWORD_LENGTH = plugin.getConfig().getInt("password.max", 32);
     @Command("register")
     @Description("Register password.")
     public void register(CommandSender sender, String password, String confirmPassword){
@@ -56,6 +57,11 @@ public class RegisterCommand {
 
         if (password.length() < MIN_PASSWORD_LENGTH) {
             player.sendMessage(Locale.PASSWORD_TOO_SHORT.replace("<min>", String.valueOf(MIN_PASSWORD_LENGTH)));
+            return;
+        }
+
+        if (password.length() > MAX_PASSWORD_LENGTH) {
+            player.sendMessage(Locale.PASSWORD_TOO_LONG.replace("<max>", String.valueOf(MAX_PASSWORD_LENGTH)));
             return;
         }
 

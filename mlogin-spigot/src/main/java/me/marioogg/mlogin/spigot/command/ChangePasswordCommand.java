@@ -19,7 +19,8 @@ import java.util.UUID;
 public class ChangePasswordCommand {
     private static final SpigotPlugin plugin = SpigotPlugin.getInstance();
     private static final long TIMEOUT_MILLIS = 5000;
-    private static final int MIN_PASSWORD_LENGTH = plugin.getConfig().getInt("security.min-password-length");
+    private static final int MIN_PASSWORD_LENGTH = plugin.getConfig().getInt("password.min", 8);
+    private static final int MAX_PASSWORD_LENGTH = plugin.getConfig().getInt("password.max", 32);
 
     @Command("changepass")
     @Description("Change your account password.")
@@ -41,6 +42,11 @@ public class ChangePasswordCommand {
 
         if (newPassword.length() < MIN_PASSWORD_LENGTH) {
             player.sendMessage(Locale.PASSWORD_TOO_SHORT.replace("<min>", String.valueOf(MIN_PASSWORD_LENGTH)));
+            return;
+        }
+
+        if (newPassword.length() > MAX_PASSWORD_LENGTH) {
+            player.sendMessage(Locale.PASSWORD_TOO_LONG.replace("<max>", String.valueOf(MAX_PASSWORD_LENGTH)));
             return;
         }
 

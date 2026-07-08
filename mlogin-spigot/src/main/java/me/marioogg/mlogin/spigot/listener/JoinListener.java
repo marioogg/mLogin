@@ -75,17 +75,24 @@ public class JoinListener implements Listener {
         };
     }
 
+    private void applyEffects(Player player) {
+        if (plugin.getConfig().getBoolean("protection.effects.blindness", true)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 4, false, false));
+        }
+        if (plugin.getConfig().getBoolean("protection.effects.slowness", true)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, false, false));
+        }
+    }
+
     private void announce(Player player, AuthState state) {
         switch (state) {
             case REGISTER_REQUIRED -> {
                 player.sendMessage(Locale.REGISTER_REQUIRED);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 4, false, false));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, false, false));
+                applyEffects(player);
             }
             case LOGIN_REQUIRED -> {
                 player.sendMessage(Locale.LOGIN_REQUIRED);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 4, false, false));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, false, false));
+                applyEffects(player);
             }
             case LOGGED_IN -> {
                 player.sendMessage(Locale.AUTO_LOGIN);

@@ -58,6 +58,7 @@ public class VelocityRequestHandler {
                 case CHANGE_PASSWORD -> changePassword(request, uuid);
                 case UNREGISTER -> unregister(request, uuid);
             };
+
         } catch (Exception e) {
             Log.getLogger().error("Error processing the request " + request.getRequestId() + " (" + request.getType() + ")", e);
             return AuthResponse.fail(request.getRequestId(), ResponseReason.ERROR);
@@ -79,7 +80,11 @@ public class VelocityRequestHandler {
             return AuthResponse.fail(request.getRequestId(), ResponseReason.ALREADY_LOGGED_IN);
         }
 
-        long blockedSeconds = rateLimiter.getBlockedSecondsRemaining(uuid);
+        String ip = request.getIp();
+        long blockedSeconds = Math.max(
+                rateLimiter.getBlockedSecondsRemaining(uuid),
+                rateLimiter.getBlockedSecondsRemaining(ip)
+        );
         if (blockedSeconds > 0) {
             return AuthResponse.rateLimited(request.getRequestId(), blockedSeconds);
         }
@@ -92,10 +97,12 @@ public class VelocityRequestHandler {
         String plainPassword = EncryptionUtils.decrypt(request.getEncryptedPassword(), secretKey);
         if (!EncryptionUtils.verifyPassword(plainPassword, hash.get())) {
             rateLimiter.registerFailure(uuid);
+            rateLimiter.registerFailure(ip);
             return AuthResponse.fail(request.getRequestId(), ResponseReason.WRONG_PASSWORD);
         }
 
         rateLimiter.registerSuccess(uuid);
+        rateLimiter.registerSuccess(ip);
         authService.setState(uuid, AuthState.LOGGED_IN);
         return AuthResponse.ok(request.getRequestId());
     }

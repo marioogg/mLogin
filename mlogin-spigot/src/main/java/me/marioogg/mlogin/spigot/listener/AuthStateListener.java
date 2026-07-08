@@ -22,6 +22,8 @@ import me.marioogg.mlogin.core.model.AuthMessage;
 import me.marioogg.mlogin.core.protocol.MessageChannel;
 import me.marioogg.mlogin.core.util.Log;
 import me.marioogg.mlogin.spigot.cache.AuthStateCache;
+import me.marioogg.mlogin.spigot.event.PlayerLogEvent;
+import org.bukkit.Bukkit;
 import redis.clients.jedis.JedisPubSub;
 
 public class AuthStateListener {
@@ -42,6 +44,7 @@ public class AuthStateListener {
                 try {
                     AuthMessage authMessage = gson.fromJson(message, AuthMessage.class);
                     cache.set(authMessage.getUuid(), authMessage.getState());
+                    Bukkit.getPluginManager().callEvent(new PlayerLogEvent(authMessage));
                 } catch (Exception e) {
                     Log.getLogger().error("Error parsing AuthMessage from Redis.", e);
                 }

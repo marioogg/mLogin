@@ -32,21 +32,19 @@ public class AuthRequest {
     private final String extra;
     private final long timestamp;
     private final int protocolVersion;
+    // Client IP address, used for IP-based rate limiting. Nullable for
+    // backwards compatibility with older clients that do not send it.
+    private final String ip;
 
     public static AuthRequest of(RequestType type, UUID playerUuid, String username, String encryptedPassword) {
-        return new AuthRequest(
-                UUID.randomUUID(),
-                type,
-                playerUuid,
-                username,
-                encryptedPassword,
-                null,
-                System.currentTimeMillis(),
-                ProtocolVersion.CURRENT
-        );
+        return of(type, playerUuid, username, encryptedPassword, null, null);
     }
 
     public static AuthRequest of(RequestType type, UUID playerUuid, String username, String encryptedPassword, String extra) {
+        return of(type, playerUuid, username, encryptedPassword, extra, null);
+    }
+
+    public static AuthRequest of(RequestType type, UUID playerUuid, String username, String encryptedPassword, String extra, String ip) {
         return new AuthRequest(
                 UUID.randomUUID(),
                 type,
@@ -55,7 +53,8 @@ public class AuthRequest {
                 encryptedPassword,
                 extra,
                 System.currentTimeMillis(),
-                ProtocolVersion.CURRENT
+                ProtocolVersion.CURRENT,
+                ip
         );
     }
 }

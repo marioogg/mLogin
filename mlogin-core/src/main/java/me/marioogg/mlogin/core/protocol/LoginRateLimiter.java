@@ -44,23 +44,38 @@ public class LoginRateLimiter {
     }
 
     public long getBlockedSecondsRemaining(UUID uuid) {
-        return redis.getTtlSeconds(BLOCK_PREFIX + uuid);
+        return getBlockedSecondsRemaining(uuid.toString());
     }
 
     public void registerFailure(UUID uuid) {
-        long attempts = redis.incrementWithExpiry(ATTEMPTS_PREFIX + uuid, attemptWindowSeconds);
+        registerFailure(uuid.toString());
+    }
+
+    public void registerSuccess(UUID uuid) {
+        registerSuccess(uuid.toString());
+    }
+
+    public long getBlockedSecondsRemaining(String identifier) {
+        if (identifier == null || identifier.isEmpty()) return 0;
+        return redis.getTtlSeconds(BLOCK_PREFIX + identifier);
+    }
+
+    public void registerFailure(String identifier) {
+        if (identifier == null || identifier.isEmpty()) return;
+        long attempts = redis.incrementWithExpiry(ATTEMPTS_PREFIX + identifier, attemptWindowSeconds);
         if (attempts < maxAttempts) {
             return;
         }
 
-        long strikes = redis.incrementWithExpiry(STRIKES_PREFIX + uuid, strikeWindowSeconds);
+        long strikes = redis.incrementWithExpiry(STRIKES_PREFIX + identifier, strikeWindowSeconds);
         long blockSeconds = Math.min(maxBlockSeconds, baseBlockSeconds * (1L << Math.min(strikes - 1, 20)));
 
-        redis.setWithExpiry(BLOCK_PREFIX + uuid, (int) blockSeconds);
-        redis.delete(ATTEMPTS_PREFIX + uuid);
+        redis.setWithExpiry(BLOCK_PREFIX + identifier, (int) blockSeconds);
+        redis.delete(ATTEMPTS_PREFIX + identifier);
     }
 
-    public void registerSuccess(UUID uuid) {
-        redis.delete(ATTEMPTS_PREFIX + uuid, BLOCK_PREFIX + uuid);
+    public void registerSuccess(String identifier) {
+        if (identifier == null || identifier.isEmpty()) return;
+        redis.delete(ATTEMPTS_PREFIX + identifier, BLOCK_PREFIX + identifier);
     }
 }

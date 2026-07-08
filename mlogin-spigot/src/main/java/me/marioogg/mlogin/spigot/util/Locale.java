@@ -44,6 +44,7 @@ public class Locale {
     public static String TIMEOUT;
     public static String PASSWORDS_DONT_MATCH;
     public static String PASSWORD_TOO_SHORT;
+    public static String PASSWORD_TOO_LONG;
 
     public static String REGISTER_REQUIRED;
     public static String LOGIN_REQUIRED;
@@ -77,6 +78,7 @@ public class Locale {
         TIMEOUT = c("TIMEOUT");
         PASSWORDS_DONT_MATCH = c("PASSWORDS-DONT-MATCH");
         PASSWORD_TOO_SHORT = c("PASSWORD-TOO-SHORT");
+        PASSWORD_TOO_LONG = c("PASSWORD-TOO-LONG");
         REGISTER_REQUIRED = c("REGISTER-REQUIRED");
         LOGIN_REQUIRED = c("LOGIN-REQUIRED");
         AUTO_LOGIN = c("AUTO-LOGIN");

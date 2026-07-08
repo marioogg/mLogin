@@ -6,6 +6,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -13,6 +15,12 @@ public class EncryptionUtils {
     private static final String ALGORITHM = "AES/GCM/NoPadding";
     private static final int TAG_LENGTH_BIT = 128;
     private static final int IV_LENGTH_BYTE = 12;
+
+    private static SecretKeySpec deriveKey(String secret) throws Exception {
+        MessageDigest sha = MessageDigest.getInstance("SHA-256");
+        byte[] key = sha.digest(secret.getBytes(StandardCharsets.UTF_8));
+        return new SecretKeySpec(key, "AES");
+    }
 
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
@@ -41,10 +49,10 @@ public class EncryptionUtils {
     public static String encrypt(String plainText, String secret) throws Exception {
         byte[] iv = new byte[IV_LENGTH_BYTE];
         new SecureRandom().nextBytes(iv);
-        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(), "AES");
+        SecretKeySpec keySpec = deriveKey(secret);
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
-        byte[] cipherText = cipher.doFinal(plainText.getBytes());
+        byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
         ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + cipherText.length);
         byteBuffer.put(iv);
         byteBuffer.put(cipherText);
@@ -59,10 +67,10 @@ public class EncryptionUtils {
         byteBuffer.get(iv);
         byte[] cipherText = new byte[byteBuffer.remaining()];
         byteBuffer.get(cipherText);
-        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(), "AES");
+        SecretKeySpec keySpec = deriveKey(secret);
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, keySpec, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
 
-        return new String(cipher.doFinal(cipherText));
+        return new String(cipher.doFinal(cipherText), StandardCharsets.UTF_8);
     }
 }

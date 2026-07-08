@@ -9,6 +9,9 @@
 # documentation: https://mlogin.marioogg.dev
 # discord: https://discord.gg/VXsGUyR5wA
 # --------------------------------------------
+# IMPORTANT: This MUST be the exact same value as 'security.secret-key'
+# inside config.conf in the mLogin folder of your Velocity/proxy server.
+# If it does not match, password decryption will fail and no one can log in.
 secret-key: ""
 
 redis: # Redis connection settings.
