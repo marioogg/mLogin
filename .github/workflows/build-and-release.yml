@@ -1,36 +1,45 @@
 name: Build and Release
-
 on:
   push:
     branches:
       - master
-
 permissions:
   contents: write
-
 jobs:
   build-and-release:
     name: Build and release plugin
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
+          cache: maven
       - name: Build plugin
-        run: ./gradlew --no-daemon build
-
+        run: mvn --batch-mode --no-transfer-progress clean package
+      - name: Collect artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          mkdir -p jars
+          for jar in \
+            mlogin-spigot/target/mLogin-*.jar \
+            mlogin-velocity/target/mLogin-velocity-*.jar; do
+            case "$(basename "${jar}")" in
+              original-*) continue ;;
+            esac
+            cp "${jar}" jars/
+          done
+          for jar in jars/*.jar; do
+            md5sum "${jar}" | awk '{print $1}' > "${jar}.MD5"
+          done
+          ls -l jars/
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -40,24 +49,20 @@ jobs:
             jars/*.jar.MD5
           if-no-files-found: error
           retention-days: 30
-
       - name: Prepare release metadata
         id: release
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
-
           artifacts=(jars/*.jar jars/*.jar.MD5)
           if [ "${#artifacts[@]}" -eq 0 ]; then
             echo "No release artifacts were found in jars/." >&2
             exit 1
           fi
-
           short_sha="${GITHUB_SHA::7}"
           tag="build-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}-${short_sha}"
           title="mLogin build ${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT} (${short_sha})"
-
           {
             echo "mLogin automated build"
             echo
@@ -70,10 +75,8 @@ jobs:
               echo "- $(basename "${artifact}")"
             done
           } > release-notes.md
-
           echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
           echo "title=${title}" >> "${GITHUB_OUTPUT}"
-
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -83,7 +86,6 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-
           artifacts=(jars/*.jar jars/*.jar.MD5)
           gh release create "${RELEASE_TAG}" "${artifacts[@]}" \
             --target "${GITHUB_SHA}" \
