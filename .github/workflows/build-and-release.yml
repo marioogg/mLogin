@@ -60,12 +60,33 @@ jobs:
             echo "No release artifacts were found in jars/." >&2
             exit 1
           fi
+          version=""
+          for jar in jars/mLogin-*.jar; do
+            base="$(basename "${jar}" .jar)"
+            case "${base}" in
+              mLogin-velocity-*) continue ;;
+            esac
+            version="${base#mLogin-}"
+            break
+          done
+          if [ -z "${version}" ]; then
+            for jar in jars/mLogin-velocity-*.jar; do
+              base="$(basename "${jar}" .jar)"
+              version="${base#mLogin-velocity-}"
+              break
+            done
+          fi
+          if [ -z "${version}" ]; then
+            echo "Could not determine version from jar filenames." >&2
+            exit 1
+          fi
           short_sha="${GITHUB_SHA::7}"
-          tag="build-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}-${short_sha}"
-          title="mLogin build ${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT} (${short_sha})"
+          tag="v${version}-build.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+          title="mLogin ${version}"
           {
             echo "mLogin automated build"
             echo
+            echo "- Version: ${version}"
             echo "- Branch: ${GITHUB_REF_NAME}"
             echo "- Commit: [${short_sha}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})"
             echo "- Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
@@ -75,6 +96,7 @@ jobs:
               echo "- $(basename "${artifact}")"
             done
           } > release-notes.md
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
           echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
           echo "title=${title}" >> "${GITHUB_OUTPUT}"
       - name: Create GitHub release
