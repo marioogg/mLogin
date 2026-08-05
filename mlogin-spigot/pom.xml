@@ -110,7 +110,7 @@
         <dependency>
             <groupId>io.github.revxrsal</groupId>
             <artifactId>lamp.bukkit</artifactId>
-            <version>4.0.0-rc.17</version>
+            <version>4.0.0-rc.18</version>
         </dependency>
         <dependency>
             <groupId>com.github.retrooper</groupId>
